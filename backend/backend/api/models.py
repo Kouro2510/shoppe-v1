@@ -5,9 +5,6 @@ from django.db import models
 # Create your models here.
 class User(AbstractUser):
     # Delete not use field
-    is_staff = None
-    is_superuser = None
-    last_login = models.DateTimeField()
     first_name = models.CharField(max_length=100, unique=True)
     last_name = models.CharField(max_length=100, unique=True)
     username = models.CharField(max_length=100, unique=True)

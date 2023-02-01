@@ -1,3 +1,6 @@
+from datetime import datetime
+from time import timezone
+
 from django.contrib.auth import authenticate
 from django.contrib.auth.hashers import make_password
 from django.http import JsonResponse
@@ -16,7 +19,6 @@ class UserRegisterView(APIView):
         serializer = RegisterUserSerializer(data=request.data)
         if serializer.is_valid():
             serializer.validated_data['password'] = make_password(serializer.validated_data['password'])
-            serializer.validated_data['is']
             serializer.save()
 
             return JsonResponse({
@@ -35,6 +37,8 @@ class UserLoginView(APIView):
     def post(self, request):
         serializer = UserLoginSerializer(data=request.data)
         if serializer.is_valid():
+            serializer.last_login = timezone.now()
+            serializer.save()
             user = authenticate(
                 request,
                 username=serializer.validated_data['email'],
@@ -45,6 +49,7 @@ class UserLoginView(APIView):
                 data = {
                     'refresh_token': str(refresh),
                     'access_token': str(refresh.access_token),
+
                 }
                 return Response(data, status=status.HTTP_200_OK)
 
@@ -57,5 +62,3 @@ class UserLoginView(APIView):
             'error_messages': serializer.errors,
             'error_code': 400
         }, status=status.HTTP_400_BAD_REQUEST)
-
-

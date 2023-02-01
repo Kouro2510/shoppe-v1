@@ -12,7 +12,7 @@ class RegisterUserSerializer(serializers.ModelSerializer):
             'username',
             'email',
             'password',
-            'is_staff',
+            'last_login'
 
         )
         extra_kwargs = {'Password': {'write_only': True}}
